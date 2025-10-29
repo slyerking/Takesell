@@ -1,0 +1,124 @@
+{
+  "fabrics": [
+    {
+      "name": "Turkey",
+      "prices": {
+        "sofa": { "retail": 400, "wholesale": 350 },
+        "chair": { "retail": 220, "wholesale": 200 },
+        "bed": { "retail": 1200, "wholesale": 1100 },
+        "table": { "retail": 300, "wholesale": 270 },
+        "dining": { "retail": 780, "wholesale": 700 },
+        "tul": { "retail": 120, "wholesale": 100 },
+        "box": { "retail": 220, "wholesale": 200 },
+        "cushion_16_16": { "retail": 100, "wholesale": 90 },
+        "cushion_18_18": { "retail": 120, "wholesale": 100 },
+        "cushion_20_20": { "retail": 120, "wholesale": 100 },
+        "cushion_24_24": { "retail": 180, "wholesale": 150 },
+        "cushion_30_30": { "retail": 250, "wholesale": 220 },
+        "tv": { "retail": 300, "wholesale": 270 },
+        "ac": { "retail": 350, "wholesale": 300 },
+        "foam": { "retail": 300, "wholesale": 250 }
+      }
+    },
+    {
+      "name": "China Solid",
+      "prices": {
+        "sofa": { "retail": 400, "wholesale": 350 },
+        "chair": { "retail": 220, "wholesale": 200 },
+        "bed": { "retail": 1200, "wholesale": 1100 },
+        "table": { "retail": 350, "wholesale": 300 },
+        "dining": { "retail": 850, "wholesale": 750 },
+        "tul": { "retail": 150, "wholesale": 120 },
+        "box": { "retail": 280, "wholesale": 250 },
+        "cushion_16_16": { "retail": 100, "wholesale": 90 },
+        "cushion_18_18": { "retail": 120, "wholesale": 100 },
+        "cushion_20_20": { "retail": 160, "wholesale": 130 },
+        "cushion_24_24": { "retail": 200, "wholesale": 160 },
+        "cushion_30_30": { "retail": 260, "wholesale": 220 },
+        "tv": { "retail": 300, "wholesale": 270 },
+        "ac": { "retail": 350, "wholesale": 300 },
+        "foam": { "retail": 300, "wholesale": 250 }
+      }
+    },
+    {
+      "name": "China Print",
+      "prices": {
+        "sofa": { "retail": 420, "wholesale": 370 },
+        "chair": { "retail": 220, "wholesale": 200 },
+        "bed": { "retail": 1200, "wholesale": 1100 },
+        "table": { "retail": 350, "wholesale": 300 },
+        "dining": { "retail": 850, "wholesale": 750 },
+        "tul": { "retail": 150, "wholesale": 120 },
+        "box": { "retail": 250, "wholesale": 220 },
+        "cushion_16_16": { "retail": 100, "wholesale": 90 },
+        "cushion_18_18": { "retail": 120, "wholesale": 100 },
+        "cushion_20_20": { "retail": 160, "wholesale": 130 },
+        "cushion_24_24": { "retail": 200, "wholesale": 160 },
+        "cushion_30_30": { "retail": 260, "wholesale": 220 },
+        "tv": { "retail": 350, "wholesale": 300 },
+        "ac": { "retail": 400, "wholesale": 350 },
+        "foam": { "retail": 350, "wholesale": 300 }
+      }
+    },
+    {
+      "name": "Velvet",
+      "prices": {
+        "sofa": { "retail": 550, "wholesale": 480 },
+        "chair": { "retail": 280, "wholesale": 240 },
+        "bed": { "retail": 1600, "wholesale": 1400 },
+        "table": { "retail": 420, "wholesale": 370 },
+        "dining": { "retail": 950, "wholesale": 850 },
+        "tul": { "retail": 170, "wholesale": 150 },
+        "box": { "retail": 320, "wholesale": 280 },
+        "cushion_16_16": { "retail": 130, "wholesale": 110 },
+        "cushion_18_18": { "retail": 150, "wholesale": 130 },
+        "cushion_20_20": { "retail": 180, "wholesale": 150 },
+        "cushion_24_24": { "retail": 210, "wholesale": 180 },
+        "cushion_30_30": { "retail": 270, "wholesale": 230 },
+        "tv": { "retail": 500, "wholesale": 450 },
+        "ac": { "retail": 500, "wholesale": 450 },
+        "foam": { "retail": 500, "wholesale": 450 }
+      }
+    },
+    {
+      "name": "Hone Com",
+      "prices": {
+        "sofa": { "retail": 550, "wholesale": 480 },
+        "chair": { "retail": 250, "wholesale": 220 },
+        "bed": { "retail": 1600, "wholesale": 1400 },
+        "table": { "retail": 300, "wholesale": 270 },
+        "dining": { "retail": 800, "wholesale": 700 },
+        "tul": { "retail": 200, "wholesale": 170 },
+        "box": { "retail": 390, "wholesale": 340 },
+        "cushion_16_16": { "retail": 150, "wholesale": 120 },
+        "cushion_18_18": { "retail": 180, "wholesale": 140 },
+        "cushion_20_20": { "retail": 220, "wholesale": 180 },
+        "cushion_24_24": { "retail": 290, "wholesale": 240 },
+        "cushion_30_30": { "retail": 450, "wholesale": 380 },
+        "tv": { "retail": 450, "wholesale": 400 },
+        "ac": { "retail": 400, "wholesale": 350 },
+        "foam": { "retail": 650, "wholesale": 550 }
+      }
+    },
+    {
+      "name": "Jacquard",
+      "prices": {
+        "sofa": { "retail": 1000, "wholesale": 900 },
+        "chair": { "retail": 400, "wholesale": 350 },
+        "bed": { "retail": 1500, "wholesale": 1300 },
+        "table": { "retail": 550, "wholesale": 480 },
+        "dining": { "retail": 1800, "wholesale": 1600 },
+        "tul": { "retail": 450, "wholesale": 400 },
+        "box": { "retail": 550, "wholesale": 500 },
+        "cushion_16_16": { "retail": 250, "wholesale": 200 },
+        "cushion_18_18": { "retail": 350, "wholesale": 300 },
+        "cushion_20_20": { "retail": 500, "wholesale": 420 },
+        "cushion_24_24": { "retail": 600, "wholesale": 520 },
+        "cushion_30_30": { "retail": 800, "wholesale": 700 },
+        "tv": { "retail": 450, "wholesale": 400 },
+        "ac": { "retail": 450, "wholesale": 400 },
+        "foam": { "retail": 750, "wholesale": 650 }
+      }
+    }
+  ]
+}
