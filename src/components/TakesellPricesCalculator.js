@@ -9,6 +9,15 @@ import {
   doc,
 } from "firebase/firestore";
 
+import { 
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
+
+
 export default function TakesellPricesCalculator() {
   const [fabrics, setFabrics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -19,6 +28,43 @@ export default function TakesellPricesCalculator() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    // ---------------- AUTH SYSTEM Start ----------------
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
+  const [authMode, setAuthMode] = useState("login"); // 'login' or 'signup'
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleAuthAction = async () => {
+    setAuthError("");
+    try {
+      if (authMode === "signup") {
+        await createUserWithEmailAndPassword(auth, authEmail, authPassword);
+      } else {
+        await signInWithEmailAndPassword(auth, authEmail, authPassword);
+      }
+      setShowAuthModal(false);
+      setAuthEmail("");
+      setAuthPassword("");
+    } catch (error) {
+      setAuthError(error.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  }; // ---------------- AUTH SYSTEM End ----------------
+
 
   const products = [
     { key: "sofa", label: "Sofa Cover" },
@@ -187,6 +233,31 @@ export default function TakesellPricesCalculator() {
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <h1 className="text-2xl font-bold mb-4">Takesell Prices Calculator</h1>
 
+                {/* ---------- Auth Section Start ---------- */}
+          <div className="mb-3 flex items-center justify-between">
+            {user ? (
+              <>
+                <div className="text-sm text-green-600 font-semibold">
+                  Logged in as {user.email}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-red-600 underline hover:text-red-800"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Login / Signup
+              </button>
+            )}
+          </div> {/* ---------- Auth Section End ---------- */}
+
+
       <div className="flex gap-4 flex-col md:flex-row items-start">
         {/* Sidebar */}
         <div className="w-full md:w-1/3 bg-gray-50 p-4 rounded-lg">
@@ -207,26 +278,28 @@ export default function TakesellPricesCalculator() {
 
           {/* Replaced quick input with three buttons */}
           <div className="mt-4 flex flex-wrap gap-2">
+            {/* ---------- Add Edit Delete Button With Login Condition Start---------- */}
             <button
-              onClick={openAddModal}
+              onClick={user ? openAddModal : () => alert("Please log in first.")}
               className="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
               Add
             </button>
             <button
-              onClick={openEditModal}
+              onClick={user ? openEditModal : () => alert("Please log in first.")}
               className="flex-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               disabled={!selectedFabric}
             >
               Edit
             </button>
             <button
-              onClick={openDeleteModal}
+              onClick={user ? openDeleteModal : () => alert("Please log in first.")}
               className="flex-1 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               disabled={fabrics.length === 1}
             >
               Delete
-            </button>
+            </button> {/* ---------- Add Edit Delete Button With Login Condition End ---------- */}
+
           </div>
 
           <div className="mt-4">
@@ -633,6 +706,60 @@ export default function TakesellPricesCalculator() {
           </div>
         </div>
       )}
+
+
+            {/* ---------- Login / Signup Modal Start ---------- */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white w-full max-w-sm p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-3 text-center">
+              {authMode === "login" ? "Login" : "Sign Up"}
+            </h2>
+            <input
+              type="email"
+              placeholder="Email"
+              value={authEmail}
+              onChange={(e) => setAuthEmail(e.target.value)}
+              className="w-full p-2 border rounded mb-2"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={authPassword}
+              onChange={(e) => setAuthPassword(e.target.value)}
+              className="w-full p-2 border rounded mb-2"
+            />
+            {authError && (
+              <p className="text-sm text-red-600 mb-2">{authError}</p>
+            )}
+            <div className="flex justify-between items-center mt-2">
+              <button
+                onClick={handleAuthAction}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                {authMode === "login" ? "Login" : "Sign Up"}
+              </button>
+              <button
+                onClick={() =>
+                  setAuthMode(authMode === "login" ? "signup" : "login")
+                }
+                className="text-sm text-blue-600 underline"
+              >
+                {authMode === "login"
+                  ? "Create new account"
+                  : "Already have account? Login"}
+              </button>
+            </div>
+            <button
+              onClick={() => setShowAuthModal(false)}
+              className="mt-4 text-gray-600 text-sm underline w-full text-center"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )} {/* ---------- Login / Signup Modal End ---------- */}
+
     </div>
   );
 }
