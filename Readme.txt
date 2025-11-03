@@ -5,4 +5,5 @@ v1.0.1 - Updated Footer Section
 v1.0.2 - Added FontAwesome Icon CDN
 v1.0.3 - Added Grand Total Price on Sidebar
 v1.0.4 - Added Price Summary on Sidebar
-v1.0.5 - Updated Price Summary on Sidebar
+v1.0.5 - Updated Price Summary and Added Favicon
+v1.0.6 - Added Login/Signup Modal & Login Required for Add, Edit, Delete Button
