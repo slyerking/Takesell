@@ -17,7 +17,6 @@ import {
   onAuthStateChanged
 } from "firebase/auth";
 
-import toast, { Toaster } from "react-hot-toast";
 
 export default function TakesellPricesCalculator() {
   const [fabrics, setFabrics] = useState([]);
@@ -51,23 +50,19 @@ export default function TakesellPricesCalculator() {
     try {
       if (authMode === "signup") {
         await createUserWithEmailAndPassword(auth, authEmail, authPassword);
-        toast.success("Account created successfully!");
       } else {
         await signInWithEmailAndPassword(auth, authEmail, authPassword);
-        toast.success("Logged in successfully!");
       }
       setShowAuthModal(false);
       setAuthEmail("");
       setAuthPassword("");
     } catch (error) {
       setAuthError(error.message);
-      toast.error("Authentication failed!");
     }
   };
 
   const handleLogout = async () => {
     await signOut(auth);
-    toast("Logged out successfully!", { icon: "👋" });
   }; // ---------------- AUTH SYSTEM End ----------------
 
 
@@ -87,8 +82,6 @@ export default function TakesellPricesCalculator() {
     { key: "tv", label: "TV Cover" },
     { key: "ac", label: "AC Cover" },
     { key: "foam", label: "Foam Cover" },
-    { key: "corner", label: "Corner Cover" },
-    { key: "divan", label: "Divan Cover" },
   ];
 
   const emptyPrices = products.reduce((acc, p) => {
@@ -153,7 +146,7 @@ export default function TakesellPricesCalculator() {
   async function saveNewFabric() {
     const name = (formValues.name || "").trim();
     if (!name) {
-      toast.error("Please provide a fabric name.");
+      alert("Please provide a fabric name.");
       return;
     }
     const prices = {};
@@ -164,7 +157,6 @@ export default function TakesellPricesCalculator() {
       };
     }
     await addDoc(collection(db, "fabrics"), { name, prices });
-    toast.success("Fabric added successfully!");
     setShowAddModal(false);
     setFormValues({ name: "", prices: { ...emptyPrices } });
     setTimeout(() => {
@@ -189,7 +181,7 @@ export default function TakesellPricesCalculator() {
     if (!selectedFabric) return;
     const name = (formValues.name || "").trim();
     if (!name) {
-      toast.error("Fabric name cannot be empty.");
+      alert("Fabric name cannot be empty.");
       return;
     }
     const prices = {};
@@ -200,7 +192,6 @@ export default function TakesellPricesCalculator() {
       };
     }
     await updateDoc(doc(db, "fabrics", selectedFabric.id), { name, prices });
-    toast.success("Fabric updated successfully!");
     setShowEditModal(false);
   }
 
@@ -217,7 +208,6 @@ export default function TakesellPricesCalculator() {
       return;
     }
     await deleteDoc(doc(db, "fabrics", selectedFabric.id));
-    toast.success("Fabric deleted successfully!");
     setShowDeleteModal(false);
     setFabrics((old) => old.filter((_, i) => i !== selectedIndex));
     setSelectedIndex((s) => Math.max(0, s - 1));
@@ -252,7 +242,7 @@ export default function TakesellPricesCalculator() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-red-600 hover:text-red-800"
+                  className="text-sm text-red-600 underline hover:text-red-800"
                 >
                   Logout
                 </button>
@@ -260,7 +250,7 @@ export default function TakesellPricesCalculator() {
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="w-full py-2 bg-neutral-900 text-white rounded hover:bg-neutral-800 active:translate-y-[0.5px] transition-all duration-200"
+                className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
               >
                 Login / Signup
               </button>
@@ -290,21 +280,20 @@ export default function TakesellPricesCalculator() {
           <div className="mt-4 flex flex-wrap gap-2">
             {/* ---------- Add Edit Delete Button With Login Condition Start---------- */}
             <button
-              onClick={user ? openAddModal : () => toast.error(<span>Please login to <span className="text-green-700 font-semibold">Add</span> a fabric.</span>)}
-              
+              onClick={user ? openAddModal : () => alert("Please log in first.")}
               className="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
               Add
             </button>
             <button
-              onClick={user ? openEditModal : () => toast.error(<span>Please login to <span className="text-blue-700 font-semibold">Edit</span> this fabric.</span>)}
+              onClick={user ? openEditModal : () => alert("Please log in first.")}
               className="flex-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               disabled={!selectedFabric}
             >
               Edit
             </button>
             <button
-              onClick={user ? openDeleteModal : () => toast.error(<span>Please login to <span className="text-red-700 font-semibold">Delete</span> this fabric.</span>)}
+              onClick={user ? openDeleteModal : () => alert("Please log in first.")}
               className="flex-1 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               disabled={fabrics.length === 1}
             >
@@ -354,13 +343,7 @@ export default function TakesellPricesCalculator() {
                   if (qty === 0) return null; // Qty 0 Shows Items if Item > 0
                   const price = selectedFabric.prices?.[p.key]?.[priceMode] || 0;
                   const total = price * qty;
-                          // Updated unit label logic
-                          let unitLabel = "";
-                          if (p.key === "sofa") {
-                            unitLabel = qty === 1 ? "Seat" : "Seats";
-                          } else {
-                            unitLabel = qty === 1 ? "Pc" : "Pcs";
-                          }
+                  const unitLabel = p.key === "sofa" ? "Seats" : "Pcs"; // For sofa Shows seats
                   return (
                     <div key={p.key} className="flex justify-between mb-1">
                       <span>{selectedFabric.name} {p.label} {qty} {unitLabel}</span>
@@ -510,7 +493,6 @@ export default function TakesellPricesCalculator() {
         </div>
       </footer>
 
-      <Toaster position="top-center" reverseOrder={false} />
 
       {/* ---------------- Add Modal ---------------- */}
       {showAddModal && (
