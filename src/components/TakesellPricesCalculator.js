@@ -252,7 +252,7 @@ export default function TakesellPricesCalculator() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-red-600 underline hover:text-red-800"
+                  className="text-sm text-red-600 hover:text-red-800"
                 >
                   Logout
                 </button>
