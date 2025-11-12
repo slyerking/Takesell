@@ -17,17 +17,22 @@ import {
   onAuthStateChanged
 } from "firebase/auth";
 
+import toast, { Toaster } from "react-hot-toast";
 
 export default function TakesellPricesCalculator() {
+  const [copied, setCopied] = useState(false); // Copy Button
+  const [isRotating, setIsRotating] = useState(false); // Reset Button
+
+
   const [fabrics, setFabrics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [priceMode, setPriceMode] = useState("retail");
   const [quantities, setQuantities] = useState({});
   const [showAll, setShowAll] = useState(false);
 
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false); // Add Modal
+  const [showEditModal, setShowEditModal] = useState(false); // Edit Modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Delete Modal
 
     // ---------------- AUTH SYSTEM Start ----------------
   const auth = getAuth();
@@ -49,25 +54,38 @@ export default function TakesellPricesCalculator() {
     setAuthError("");
     try {
       if (authMode === "signup") {
-        await createUserWithEmailAndPassword(auth, authEmail, authPassword);
+        // await createUserWithEmailAndPassword(auth, authEmail, authPassword);
+        // toast.success("Account created successfully!");
+        toast.error(<span className="text-center"> প্লিজ <br/> মডারেটর হিসেবে <span className="text-xl text-green-600">SIGNUP</span> করার জন্য <br/> এডমিন এর সাথে যোগাযোগ করুন।  <br/> ধন্যবাদ</span>);
       } else {
         await signInWithEmailAndPassword(auth, authEmail, authPassword);
+        toast.success("Logged in successfully!");
       }
       setShowAuthModal(false);
       setAuthEmail("");
       setAuthPassword("");
     } catch (error) {
       setAuthError(error.message);
+      toast.error("Authentication failed!");
     }
   };
 
   const handleLogout = async () => {
     await signOut(auth);
+    toast("Logged out successfully!", { icon: "👋" });
   }; // ---------------- AUTH SYSTEM End ----------------
+
+    const handleReset = () => {
+    setQuantities({});            // Qty is Reset
+    setIsRotating(true);          // Rotate Reset Icon
+    setTimeout(() => setIsRotating(false), 600); // 0.6 Second
+  }; // ---------------- Reset Button End ----------------
+
 
 
   const products = [
     { key: "sofa", label: "Sofa Cover" },
+    { key: "corner", label: "Corner Cover" },
     { key: "chair", label: "Chair Cover" },
     { key: "table", label: "T-Table Cover" },
     { key: "cushion_16_16", label: "Cushion 16×16" },
@@ -82,6 +100,7 @@ export default function TakesellPricesCalculator() {
     { key: "tv", label: "TV Cover" },
     { key: "ac", label: "AC Cover" },
     { key: "foam", label: "Foam Cover" },
+    { key: "divan", label: "Divan Cover" },
   ];
 
   const emptyPrices = products.reduce((acc, p) => {
@@ -146,7 +165,7 @@ export default function TakesellPricesCalculator() {
   async function saveNewFabric() {
     const name = (formValues.name || "").trim();
     if (!name) {
-      alert("Please provide a fabric name.");
+      toast.error("Please provide a fabric name.");
       return;
     }
     const prices = {};
@@ -157,6 +176,7 @@ export default function TakesellPricesCalculator() {
       };
     }
     await addDoc(collection(db, "fabrics"), { name, prices });
+    toast.success("Fabric added successfully!");
     setShowAddModal(false);
     setFormValues({ name: "", prices: { ...emptyPrices } });
     setTimeout(() => {
@@ -181,7 +201,7 @@ export default function TakesellPricesCalculator() {
     if (!selectedFabric) return;
     const name = (formValues.name || "").trim();
     if (!name) {
-      alert("Fabric name cannot be empty.");
+      toast.error("Fabric name cannot be empty.");
       return;
     }
     const prices = {};
@@ -192,6 +212,7 @@ export default function TakesellPricesCalculator() {
       };
     }
     await updateDoc(doc(db, "fabrics", selectedFabric.id), { name, prices });
+    toast.success("Fabric updated successfully!");
     setShowEditModal(false);
   }
 
@@ -208,6 +229,7 @@ export default function TakesellPricesCalculator() {
       return;
     }
     await deleteDoc(doc(db, "fabrics", selectedFabric.id));
+    toast.success("Fabric deleted successfully!");
     setShowDeleteModal(false);
     setFabrics((old) => old.filter((_, i) => i !== selectedIndex));
     setSelectedIndex((s) => Math.max(0, s - 1));
@@ -225,13 +247,34 @@ export default function TakesellPricesCalculator() {
   if (!selectedFabric)
     return (
       <div className="text-center mt-10 text-gray-600">
-        Loading fabrics...
+        {/* Loading Screen Animation */}
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-100 z-50">
+          {/* Main Title */}
+          <span className="text-xl font-extrabold text-green-600 animate-bounce mb-2">
+            FABRICS PRICING TOOL
+          </span>
+
+          {/* Subtitle */}
+          <span className="text-xl font-semibold text-gray-300 rotate-6 animate-pulse mb-2">
+            BY
+          </span>
+
+          {/* Author Name */}
+          <span className="text-2xl font-bold text-blue-400 animate-pulse">
+            MD OBAYDULLAH
+          </span>
+
+          {/* Spinner */}
+          <br/>
+          <div className="w-10 h-10 border-2 border-blue-200 border-t-transparent rounded-full animate-spin mb-4"></div>
+        </div>
+        
       </div>
     );
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">Takesell Prices Calculator</h1>
+      <h1 className="text-2xl text-center text-gray-500 font-bold mb-4">TAKESELL PRICING TOOL</h1>
 
                 {/* ---------- Auth Section Start ---------- */}
           <div className="mb-3 flex items-center justify-between">
@@ -242,7 +285,7 @@ export default function TakesellPricesCalculator() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-red-600 underline hover:text-red-800"
+                  className="text-sm text-red-600 hover:text-red-800"
                 >
                   Logout
                 </button>
@@ -250,7 +293,7 @@ export default function TakesellPricesCalculator() {
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                className="w-full py-2 bg-neutral-900 text-white rounded hover:bg-neutral-800 active:translate-y-[0.5px] transition-all duration-200"
               >
                 Login / Signup
               </button>
@@ -280,20 +323,21 @@ export default function TakesellPricesCalculator() {
           <div className="mt-4 flex flex-wrap gap-2">
             {/* ---------- Add Edit Delete Button With Login Condition Start---------- */}
             <button
-              onClick={user ? openAddModal : () => alert("Please log in first.")}
+              onClick={user ? openAddModal : () => toast.error(<span>Please login to <span className="text-green-700 font-semibold">Add</span> a fabric.</span>)}
+              
               className="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
               Add
             </button>
             <button
-              onClick={user ? openEditModal : () => alert("Please log in first.")}
+              onClick={user ? openEditModal : () => toast.error(<span>Please login to <span className="text-blue-700 font-semibold">Edit</span> this fabric.</span>)}
               className="flex-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               disabled={!selectedFabric}
             >
               Edit
             </button>
             <button
-              onClick={user ? openDeleteModal : () => alert("Please log in first.")}
+              onClick={user ? openDeleteModal : () => toast.error(<span>Please login to <span className="text-red-700 font-semibold">Delete</span> this fabric.</span>)}
               className="flex-1 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               disabled={fabrics.length === 1}
             >
@@ -334,36 +378,159 @@ export default function TakesellPricesCalculator() {
 
 
           {/* --- Itemized Breakdown --- */}
-          {products.some(p => (quantities[p.key] || 0) > 0) && (
-            <div className="mt-4 border-t border-gray-200 pt-2">
-              <h4 className="text-sm font-semibold text-gray-700 mb-1">Itemized Price Summary</h4>
+          {products.some((p) => (quantities[p.key] || 0) > 0) && (
+            <div className="mt-4 border-t border-gray-200 pt-2 relative">
+              <div className="flex justify-between items-center mb-1">
+                <h4 className="text-sm font-semibold text-gray-700">
+                  Itemized Price Summary
+                </h4>
+
+                {/* --- Copy Button --- */}
+                <button
+                  onClick={() => {
+                    const lines = [];
+                    let totalSum = 0;
+                    let activeCount = 0;
+
+                    products.forEach((p) => {
+                      const qty = quantities[p.key] || 0;
+                      if (qty === 0) return;
+
+                      activeCount++;
+                      const price = selectedFabric.prices?.[p.key]?.[priceMode] || 0;
+                      const total = price * qty;
+                      totalSum += total;
+
+                      const unitLabel =
+                        p.key === "sofa"
+                          ? qty === 1
+                            ? "Seat"
+                            : "Seats"
+                          : qty === 1
+                          ? "Pc"
+                          : "Pcs";
+
+                      lines.push(
+                        `${selectedFabric.name} ${p.label} ${qty} ${unitLabel} = Tk ${total.toLocaleString()}`
+                      );
+                    });
+
+                    if (activeCount > 1) {
+                      lines.push(`Total Price = Tk ${totalSum.toLocaleString()}`);
+                    }
+
+                    navigator.clipboard.writeText(lines.join("\n"));
+                    toast.success("Copied to clipboard!");
+
+                    // ✓ icon animation
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 5000); // Show ⧉ Icon After 5 Second 
+                  }}
+                  className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded border text-gray-600"
+                >
+                  {copied ? "✓ Copied" : "⧉ Copy"}
+                </button>
+
+              </div>
+
               <div className="max-h-40 overflow-auto text-sm">
-                {products.map((p) => {
-                  const qty = quantities[p.key] || 0;
-                  if (qty === 0) return null; // Qty 0 Shows Items if Item > 0
-                  const price = selectedFabric.prices?.[p.key]?.[priceMode] || 0;
-                  const total = price * qty;
-                  const unitLabel = p.key === "sofa" ? "Seats" : "Pcs"; // For sofa Shows seats
-                  return (
-                    <div key={p.key} className="flex justify-between mb-1">
-                      <span>{selectedFabric.name} {p.label} {qty} {unitLabel}</span>
-                      <span>Tk {total.toLocaleString()}</span>
-                    </div>
+                {(() => {
+                  const activeItems = products.filter(
+                    (p) => (quantities[p.key] || 0) > 0
                   );
-                })}
+
+                  return (
+                    <>
+                      {activeItems.map((p) => {
+                        const qty = quantities[p.key] || 0;
+                        const price = selectedFabric.prices?.[p.key]?.[priceMode] || 0;
+                        const total = price * qty;
+
+                        const unitLabel =
+                          p.key === "sofa"
+                            ? qty === 1
+                              ? "Seat"
+                              : "Seats"
+                            : qty === 1
+                            ? "Pc"
+                            : "Pcs";
+
+                        return (
+                          <div key={p.key} className="flex justify-between mb-1">
+                            <span>
+                              {selectedFabric.name} {p.label} {qty} {unitLabel}
+                            </span>
+                            <span className="font-medium text-gray-700">
+                              Tk {total.toLocaleString()}
+                            </span>
+                          </div>
+                        );
+                      })}
+
+                      {/* --- Grand Total: show only if more than 1 item --- */}
+
+                      {activeItems.length > 1 && (
+                        <div
+                          className="flex justify-between border-t border-gray-300 mt-2 pt-1 font-semibold text-gray-800 cursor-pointer"
+                          onClick={() => {
+                            //  Calculate the total price
+                            const total = activeItems.reduce((sum, p) => {
+                              const qty = quantities[p.key] || 0;
+                              const price = selectedFabric.prices?.[p.key]?.[priceMode] || 0;
+                              return sum + qty * price;
+                            }, 0);
+
+                            // Copy only Total Price Line
+                            navigator.clipboard.writeText(`Total Price = Tk ${total.toLocaleString()}`);
+                            toast.success("Total Price copied!");
+                          }}
+                        >
+                          <span>Total Price</span>
+                          <span>
+                            Tk{" "}
+                            {activeItems
+                              .reduce((sum, p) => {
+                                const qty = quantities[p.key] || 0;
+                                const price = selectedFabric.prices?.[p.key]?.[priceMode] || 0;
+                                return sum + qty * price;
+                              }, 0)
+                              .toLocaleString()}
+                          </span>
+                        </div>
+                      )}
+
+                    </>
+                  );
+                })()}
               </div>
             </div>
           )}
-
 
         </div>
 
         {/* Main Section */}
         <div className="flex-1 bg-gray-50 p-4 rounded-lg">
-          <h2 className="font-semibold mb-3">
-            Prices for:{" "}
-            <span className="text-indigo-600">{selectedFabric.name}</span>
+          <h2 className="font-semibold mb-3 flex items-center justify-between">
+            <span>
+              Prices for:{" "}
+              <span className="text-indigo-600">{selectedFabric.name}</span>
+            </span>
+
+            {/* --- Reset Qty Button --- */}
+
+            <button
+              onClick={handleReset}
+              className="text-sm px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 active:scale-95 transition"
+            >
+              <i
+                className={`fa-solid fa-rotate-right text-blue-900 transition-transform duration-500 ${
+                  isRotating ? "animate-spin" : ""
+                }`}
+              ></i> <span className="text-blue-900" >Reset</span>
+            </button>
+
           </h2>
+
 
           <div className="space-y-4">
             {visibleProducts.map((p) => (
@@ -493,6 +660,7 @@ export default function TakesellPricesCalculator() {
         </div>
       </footer>
 
+      <Toaster position="top-center" reverseOrder={false} />
 
       {/* ---------------- Add Modal ---------------- */}
       {showAddModal && (
