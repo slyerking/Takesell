@@ -19,6 +19,7 @@ v1.1.2 - Quantity reset button added.
 v1.1.3 - Added animated effect to quantity reset button.
        - Renamed app to TAKESELL PRICING TOOL.
        - Added only total price copy feature.
+v1.1.4 - Added total profit display to price summary.
 
          
 
