@@ -95,7 +95,7 @@ export default function TakesellPricesCalculator() {
     { key: "cushion_30_30", label: "Cushion 30×30" },
     { key: "bed", label: "Bed Cover" },
     { key: "dining", label: "Dining Table Cover" },
-    { key: "tul", label: "Tul Cover" },
+    { key: "tul", label: "Tul/Mora Cover" },
     { key: "box", label: "Box Cover" },
     { key: "tv", label: "TV Cover" },
     { key: "ac", label: "AC Cover" },
@@ -271,6 +271,21 @@ export default function TakesellPricesCalculator() {
         
       </div>
     );
+
+    // Profit Calculate Start
+    function productProfit(productKey) {
+      const retail = selectedFabric?.prices?.[productKey]?.retail || 0;
+      const wholesale = selectedFabric?.prices?.[productKey]?.wholesale || 0;
+      return retail - wholesale;
+    }
+
+    function totalProfit() {
+      return products.reduce((sum, p) => {
+        const qty = quantities[p.key] || 0;
+        const profitPerUnit = productProfit(p.key);
+        return sum + profitPerUnit * qty;
+      }, 0);
+    } // Profit Calculate End
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
@@ -471,7 +486,7 @@ export default function TakesellPricesCalculator() {
 
                       {activeItems.length > 1 && (
                         <div
-                          className="flex justify-between border-t border-gray-300 mt-2 pt-1 font-semibold text-gray-800 cursor-pointer"
+                          className="flex justify-between border-t border-gray-300 mt-2 pt-1 font-semibold text-blue-900 cursor-pointer"
                           onClick={() => {
                             //  Calculate the total price
                             const total = activeItems.reduce((sum, p) => {
@@ -497,6 +512,12 @@ export default function TakesellPricesCalculator() {
                               .toLocaleString()}
                           </span>
                         </div>
+                      )}
+
+                      {priceMode === "retail" && (
+                        <p className="flex justify-between border-t border-gray-300 mt-2 pt-1 font-semibold text-green-900">
+                          <span>Total Profit</span> <span>Tk {totalProfit().toLocaleString()}</span>
+                        </p>
                       )}
 
                     </>
