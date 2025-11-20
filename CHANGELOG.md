@@ -1,13 +1,23 @@
 📦 TakeSell Pricing Tool – Release Changelog
 
-v1.1.6
+20-11-2025 - v1.1.7
+
+🔐 Login & Signup Pages
+
+Added Login and Signup pages
+
+Support for username login
+
+Added forgot password functionality
+
+19-11-2025 - v1.1.6
 🎯 Tooltip Auto-Hide Enhancement
 
 Added auto-hiding tooltip for price update tracking
 
 Improves readability and reduces UI clutter
 
-v1.1.5
+19-11-2025 - v1.1.5
 ✨ Price Update Tracking
 
 Added tooltip showing who updated a price
