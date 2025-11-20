@@ -74,8 +74,8 @@ src/
 └── App.jsx
 
 📌 Installation
-git clone https://github.com/slyerking/Takesell.git
-cd Takesell
+git clone https://github.com/yourusername/takesell-pricing-tool.git
+cd takesell-pricing-tool
 npm install
 npm start
 

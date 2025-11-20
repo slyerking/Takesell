@@ -20,9 +20,9 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 
 export default function TakesellPricesCalculator() {
-  const [copied, setCopied] = useState(false); // Copy Button
-  const [isRotating, setIsRotating] = useState(false); // Reset Button
-
+  const [copied, setCopied] = useState(false); // Copy Button state
+  const [isRotating, setIsRotating] = useState(false); // Reset Button state
+  const [tooltipVisible, setTooltipVisible] = useState({}); //  Tooltip Auto Hider state
 
   const [fabrics, setFabrics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -644,27 +644,60 @@ export default function TakesellPricesCalculator() {
                 <div className="flex gap-2 items-center md:col-span-2">
                   <div className="flex-1">
 
-                  {/* --- Retail Tooltip Start --- */}
-                  <div className="relative group w-fit">
-                    <label className="text-xs cursor-pointer" aria-label={`Retail price updated by ${selectedFabric.prices[p.key]?.retailUpdatedBy}`}>Retail (Tk)</label>
+                    {/* --- Retail Tooltip Start --- */}
+                    <div
+                      className="relative group w-fit"
+                      onMouseEnter={() => {
+                        setTooltipVisible(prev => ({
+                          ...prev,
+                          [p.key]: { ...prev[p.key], retail: true }
+                        }));
 
-                    {selectedFabric.prices[p.key]?.retailUpdatedBy && (
-                      <div
-                        className="
-                          absolute left-1/2 -translate-x-1/2 -top-10
-                          bg-white text-red-900 px-3 py-1 rounded text-xs shadow
-                          opacity-0 scale-95 translate-y-2 
-                          group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0
-                          transition-all duration-300 ease-out
-                          pointer-events-none whitespace-nowrap text-center
-                        "
+                        clearTimeout(window[`tooltipTimer_${p.key}_retail`]);
+                        window[`tooltipTimer_${p.key}_retail`] = setTimeout(() => {
+                          setTooltipVisible(prev => ({
+                            ...prev,
+                            [p.key]: { ...prev[p.key], retail: false }
+                          }));
+                        }, 1200);
+                      }}
+                      onMouseLeave={() => {
+                        clearTimeout(window[`tooltipTimer_${p.key}_retail`]);
+                        window[`tooltipTimer_${p.key}_retail`] = setTimeout(() => {
+                          setTooltipVisible(prev => ({
+                            ...prev,
+                            [p.key]: { ...prev[p.key], retail: false }
+                          }));
+                        }, 0);
+                      }}
+                    >
+                      <label
+                        className="text-xs cursor-pointer"
+                        aria-label={`Retail price updated by ${selectedFabric.prices[p.key]?.retailUpdatedBy}`}
                       >
-                        Updated by : {selectedFabric.prices[p.key].retailUpdatedBy} <br />
-                        Updated at : {formatTimestamp(selectedFabric.prices[p.key].retailUpdatedAt)}
-                      </div>
-                    )}
-                  </div>
-                  {/* --- Retail Tooltip End --- */}
+                        Retail (Tk)
+                      </label>
+
+                      {selectedFabric.prices[p.key]?.retailUpdatedBy && (
+                        <div
+                          className={`
+                            absolute left-1/2 -translate-x-1/2 -top-10
+                            bg-white text-gray-500 px-3 py-1 rounded text-xs shadow
+                            pointer-events-none whitespace-nowrap text-center
+                            transition-all duration-300 ease-out
+                            ${
+                              tooltipVisible[p.key]?.retail
+                                ? "opacity-100 scale-100 translate-y-0"
+                                : "opacity-0 scale-95 translate-y-2"
+                            }
+                          `}
+                        >
+                          <span className="font-semibold">Updated :</span> {selectedFabric.prices[p.key].retailUpdatedBy} <br />
+                          <span className="text-gray-400"> {formatTimestamp(selectedFabric.prices[p.key].retailUpdatedAt)} </span>
+                        </div>
+                      )}
+                    </div>
+                    {/* --- Retail Tooltip End --- */}
 
                     <input
                       type="number"
@@ -679,25 +712,61 @@ export default function TakesellPricesCalculator() {
                   </div>
 
                   <div className="flex-1">
-                    
+
                     {/* --- Wholesale Tooltip Start --- */}
-                  <div className="relative group w-fit">
-                    <label className="text-xs cursor-pointer" aria-label={`Wholesale price updated by ${selectedFabric.prices[p.key]?.wholesaleUpdatedBy}`}>Wholesale (Tk)</label>
-                    {selectedFabric.prices[p.key]?.wholesaleUpdatedBy && (
-                      <div className="
-                          absolute left-1/2 -translate-x-1/2 -top-10
-                          bg-white text-red-900 px-3 py-1 rounded text-xs shadow
-                          opacity-0 scale-95 translate-y-2 
-                          group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0
-                          transition-all duration-300 ease-out
-                          pointer-events-none whitespace-nowrap text-center
-                        "
+                    <div
+                      className="relative group w-fit"
+                      onMouseEnter={() => {
+                        setTooltipVisible(prev => ({
+                          ...prev,
+                          [p.key]: { ...prev[p.key], wholesale: true }
+                        }));
+
+                        clearTimeout(window[`tooltipTimer_${p.key}_wholesale`]);
+                        window[`tooltipTimer_${p.key}_wholesale`] = setTimeout(() => {
+                          setTooltipVisible(prev => ({
+                            ...prev,
+                            [p.key]: { ...prev[p.key], wholesale: false }
+                          }));
+                        }, 1200);
+                      }}
+                      onMouseLeave={() => {
+                        clearTimeout(window[`tooltipTimer_${p.key}_wholesale`]);
+                        window[`tooltipTimer_${p.key}_wholesale`] = setTimeout(() => {
+                          setTooltipVisible(prev => ({
+                            ...prev,
+                            [p.key]: { ...prev[p.key], wholesale: false }
+                          }));
+                        }, 100);
+                      }}
+                    >
+                      <label
+                        className="text-xs cursor-pointer"
+                        aria-label={`Wholesale price updated by ${selectedFabric.prices[p.key]?.wholesaleUpdatedBy}`}
+                      >
+                        Wholesale (Tk)
+                      </label>
+
+                      {selectedFabric.prices[p.key]?.wholesaleUpdatedBy && (
+                        <div
+                          className={`
+                            absolute left-1/2 -translate-x-1/2 -top-10
+                            bg-white text-gray-500 px-3 py-1 rounded text-xs shadow
+                            pointer-events-none whitespace-nowrap text-center
+                            transition-all duration-300 ease-out
+                            ${
+                              tooltipVisible[p.key]?.wholesale
+                                ? "opacity-100 scale-100 translate-y-0"
+                                : "opacity-0 scale-95 translate-y-2"
+                            }
+                          `}
                         >
-                        Updated by : {selectedFabric.prices[p.key].wholesaleUpdatedBy} <br/>
-                        Updated at : {formatTimestamp(selectedFabric.prices[p.key].wholesaleUpdatedAt)}
-                      </div>
-                    )}
-                  </div> {/* --- Wholesale Tooltip End --- */}
+                          <span className="font-semibold">Updated :</span> {selectedFabric.prices[p.key].wholesaleUpdatedBy} <br/>
+                          <span className="text-gray-400">{formatTimestamp(selectedFabric.prices[p.key].wholesaleUpdatedAt)}</span>
+                        </div>
+                      )}
+                    </div>
+                    {/* --- Wholesale Tooltip End --- */}
 
                     <input
                       type="number"

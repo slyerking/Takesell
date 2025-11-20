@@ -1,4 +1,12 @@
 📦 TakeSell Pricing Tool – Release Changelog
+
+v1.1.6
+🎯 Tooltip Auto-Hide Enhancement
+
+Added auto-hiding tooltip for price update tracking
+
+Improves readability and reduces UI clutter
+
 v1.1.5
 ✨ Price Update Tracking
 

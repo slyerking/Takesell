@@ -21,7 +21,7 @@ v1.1.3 - Added animated effect to quantity reset button.
        - Added only total price copy feature.
 v1.1.4 - Added total profit display to price summary.
 v1.1.5 - Added price update tracking tooltip with user and timestamp details.
-
+v1.1.6 - Added auto-hiding tooltip for price update tracking.
 
          
 
