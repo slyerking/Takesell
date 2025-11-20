@@ -43,6 +43,46 @@ export default function TakesellPricesCalculator() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authError, setAuthError] = useState("");
 
+      // --- Tooltip Component Start ---
+    function Tooltip({ text, children }) {
+      return (
+        <div className="relative group inline-block">
+          {children}
+
+          <div className="
+            absolute left-1/2 -translate-x-1/2 -top-10 
+            hidden group-hover:flex flex-col
+            bg-gray-800 text-white text-xs px-2 py-1 rounded
+            shadow-lg whitespace-nowrap z-50
+            transition-all duration-200 opacity-0 group-hover:opacity-100
+          ">
+            {text}
+          </div>
+        </div>
+      );
+    }
+
+    function formatTimestamp(ts) {
+      if (!ts) return "";
+
+      const d = ts.toDate();
+
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = String(d.getFullYear()).slice(-2); // last 2 digits
+
+      let hours = d.getHours();
+      const minutes = String(d.getMinutes()).padStart(2, "0");
+      const ampm = hours >= 12 ? "PM" : "AM";
+
+      hours = hours % 12 || 12;
+      hours = String(hours).padStart(2, "0");
+
+      return `${day}/${month}/${year} – ${hours}:${minutes} ${ampm}`;
+    }
+
+    // --- Tooltip Component End ---
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -197,24 +237,64 @@ export default function TakesellPricesCalculator() {
     setShowEditModal(true);
   }
 
+  // Fabrics Update Section Start 
+
   async function saveEditFabric() {
     if (!selectedFabric) return;
+
     const name = (formValues.name || "").trim();
     if (!name) {
       toast.error("Fabric name cannot be empty.");
       return;
     }
+
+    const userEmail = auth.currentUser?.email || "Unknown";
+    const now = new Date();
+
     const prices = {};
-    for (const k of Object.keys(formValues.prices)) {
-      prices[k] = {
-        retail: Number(formValues.prices[k].retail) || 0,
-        wholesale: Number(formValues.prices[k].wholesale) || 0,
+
+    for (const key of Object.keys(formValues.prices)) {
+      const oldItem = selectedFabric.prices[key] || {};
+      const newRetail = Number(formValues.prices[key].retail) || 0;
+      const newWholesale = Number(formValues.prices[key].wholesale) || 0;
+
+      const oldRetail = oldItem.retail ?? 0;
+      const oldWholesale = oldItem.wholesale ?? 0;
+
+      prices[key] = {
+        retail: newRetail,
+        wholesale: newWholesale,
+
+        // 🔥 Retail changed?
+        ...(newRetail !== oldRetail
+          ? {
+              retailUpdatedBy: userEmail,
+              retailUpdatedAt: now,
+            }
+          : {
+              retailUpdatedBy: oldItem.retailUpdatedBy || null,
+              retailUpdatedAt: oldItem.retailUpdatedAt || null,
+            }),
+
+        // 🔥 Wholesale changed?
+        ...(newWholesale !== oldWholesale
+          ? {
+              wholesaleUpdatedBy: userEmail,
+              wholesaleUpdatedAt: now,
+            }
+          : {
+              wholesaleUpdatedBy: oldItem.wholesaleUpdatedBy || null,
+              wholesaleUpdatedAt: oldItem.wholesaleUpdatedAt || null,
+            }),
       };
     }
+
     await updateDoc(doc(db, "fabrics", selectedFabric.id), { name, prices });
     toast.success("Fabric updated successfully!");
     setShowEditModal(false);
   }
+
+  // Fabrics Update Section End
 
   function openDeleteModal() {
     setDeletePasswordInput("");
@@ -563,7 +643,29 @@ export default function TakesellPricesCalculator() {
 
                 <div className="flex gap-2 items-center md:col-span-2">
                   <div className="flex-1">
-                    <label className="text-xs">Retail (Tk)</label>
+
+                  {/* --- Retail Tooltip Start --- */}
+                  <div className="relative group w-fit">
+                    <label className="text-xs cursor-pointer" aria-label={`Retail price updated by ${selectedFabric.prices[p.key]?.retailUpdatedBy}`}>Retail (Tk)</label>
+
+                    {selectedFabric.prices[p.key]?.retailUpdatedBy && (
+                      <div
+                        className="
+                          absolute left-1/2 -translate-x-1/2 -top-10
+                          bg-white text-red-900 px-3 py-1 rounded text-xs shadow
+                          opacity-0 scale-95 translate-y-2 
+                          group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0
+                          transition-all duration-300 ease-out
+                          pointer-events-none whitespace-nowrap text-center
+                        "
+                      >
+                        Updated by : {selectedFabric.prices[p.key].retailUpdatedBy} <br />
+                        Updated at : {formatTimestamp(selectedFabric.prices[p.key].retailUpdatedAt)}
+                      </div>
+                    )}
+                  </div>
+                  {/* --- Retail Tooltip End --- */}
+
                     <input
                       type="number"
                       value={selectedFabric.prices[p.key]?.retail ?? 0}
@@ -573,10 +675,30 @@ export default function TakesellPricesCalculator() {
                       className="w-full p-2 border rounded"
                       disabled
                     />
+                    
                   </div>
 
                   <div className="flex-1">
-                    <label className="text-xs">Wholesale (Tk)</label>
+                    
+                    {/* --- Wholesale Tooltip Start --- */}
+                  <div className="relative group w-fit">
+                    <label className="text-xs cursor-pointer" aria-label={`Wholesale price updated by ${selectedFabric.prices[p.key]?.wholesaleUpdatedBy}`}>Wholesale (Tk)</label>
+                    {selectedFabric.prices[p.key]?.wholesaleUpdatedBy && (
+                      <div className="
+                          absolute left-1/2 -translate-x-1/2 -top-10
+                          bg-white text-red-900 px-3 py-1 rounded text-xs shadow
+                          opacity-0 scale-95 translate-y-2 
+                          group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0
+                          transition-all duration-300 ease-out
+                          pointer-events-none whitespace-nowrap text-center
+                        "
+                        >
+                        Updated by : {selectedFabric.prices[p.key].wholesaleUpdatedBy} <br/>
+                        Updated at : {formatTimestamp(selectedFabric.prices[p.key].wholesaleUpdatedAt)}
+                      </div>
+                    )}
+                  </div> {/* --- Wholesale Tooltip End --- */}
+
                     <input
                       type="number"
                       value={selectedFabric.prices[p.key]?.wholesale ?? 0}
