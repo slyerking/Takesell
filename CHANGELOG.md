@@ -1,6 +1,12 @@
 📦 TakeSell Pricing Tool – Release Changelog
 
 
+29-11-2025 - v1.1.9 – User Display Enhancements
+
+Homepage now shows the logged-in user’s full name instead of email
+
+Added a tooltip displaying the full name for clarity and better UX
+
 29-11-2025 - v1.1.8 – Enhanced Login/Signup Modal
 
 Updated the Login/Signup modal with username-based login
