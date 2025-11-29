@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import {
-  collection,
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, where, getDocs } from "firebase/firestore";
 
-import { 
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -23,6 +10,7 @@ export default function TakesellPricesCalculator() {
   const [copied, setCopied] = useState(false); // Copy Button state
   const [isRotating, setIsRotating] = useState(false); // Reset Button state
   const [tooltipVisible, setTooltipVisible] = useState({}); //  Tooltip Auto Hider state
+  const [resetLoading, setResetLoading] = useState(false); // Reset Link Sending Loading State
 
   const [fabrics, setFabrics] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -90,17 +78,39 @@ export default function TakesellPricesCalculator() {
     return unsubscribe;
   }, []);
 
+    /* ---------------- Auth Functions Start ---------------- */
   const handleAuthAction = async () => {
     setAuthError("");
     try {
       if (authMode === "signup") {
         // await createUserWithEmailAndPassword(auth, authEmail, authPassword);
         // toast.success("Account created successfully!");
-        toast.error(<span className="text-center"> প্লিজ <br/> মডারেটর হিসেবে <span className="text-xl text-green-600">SIGNUP</span> করার জন্য <br/> এডমিন এর সাথে যোগাযোগ করুন।  <br/> ধন্যবাদ</span>);
+        toast.error(
+          <span className="text-center">
+            প্লিজ <br /> মডারেটর হিসেবে{" "}
+            <span className="text-xl text-green-600">SIGNUP</span> করার জন্য{" "}
+            <br /> এডমিন এর সাথে যোগাযোগ করুন। <br /> ধন্যবাদ
+          </span>
+        );
       } else {
-        await signInWithEmailAndPassword(auth, authEmail, authPassword);
+        let emailToUse = authEmail;
+
+        // If input is username, then find email
+        if (!authEmail.includes("@")) {
+          const q = query(
+            collection(db, "users"),
+            where("username", "==", authEmail)
+          );
+          const snapshot = await getDocs(q);
+          if (!snapshot.empty) {
+            emailToUse = snapshot.docs[0].data().email;
+          }
+        }
+
+        await signInWithEmailAndPassword(auth, emailToUse, authPassword);
         toast.success("Logged in successfully!");
       }
+
       setShowAuthModal(false);
       setAuthEmail("");
       setAuthPassword("");
@@ -110,10 +120,59 @@ export default function TakesellPricesCalculator() {
     }
   };
 
+  /* ---------------- Auth Functions End ---------------- */
+    // Forgot Password Start
+  const handleForgotPassword = async () => {
+    if (!authEmail) {
+      toast.error("Please enter your email or username first");
+      return;
+    }
+
+    setResetLoading(true);  // ⬅️ ADD THIS (loading start)
+
+    let emailToUse = authEmail;
+
+    if (!authEmail.includes("@")) {
+      const q = query(collection(db, "users"), where("username", "==", authEmail));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        setResetLoading(false); // ⬅️ stop
+        toast.error("Username not found");
+        return;
+      }
+
+      emailToUse = snapshot.docs[0].data().email;
+    }
+
+    if (authEmail.includes("@")) {
+      const q = query(collection(db, "users"), where("email", "==", authEmail));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        setResetLoading(false); // ⬅️ stop
+        toast.error("No account found with this email");
+        return;
+      }
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, emailToUse);
+      toast.success("Password reset link sent to your email!");
+    } catch (err) {
+      toast.error("Too many reset requests. Try again later.");
+    }
+
+    setResetLoading(false); // ⬅️ ADD THIS (loading end)
+  };
+  // Forgot Password End
+
+  // ---------------- Logout Functions Start ----------------
   const handleLogout = async () => {
     await signOut(auth);
     toast("Logged out successfully!", { icon: "👋" });
-  }; // ---------------- AUTH SYSTEM End ----------------
+  }; 
+  // ---------------- Logout Functions End ----------------
 
     const handleReset = () => {
     setQuantities({});            // Qty is Reset
@@ -1088,16 +1147,17 @@ export default function TakesellPricesCalculator() {
       )}
 
 
-            {/* ---------- Login / Signup Modal Start ---------- */}
+          {/* ---------- Login / Signup Modal Start ---------- */}
       {showAuthModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-full max-w-sm p-6 rounded-lg shadow-lg">
+          <div className="bg-white w-full max-w-sm p-6 rounded-lg shadow-lg relative">
             <h2 className="text-xl font-semibold mb-3 text-center">
               {authMode === "login" ? "Login" : "Sign Up"}
             </h2>
+
             <input
-              type="email"
-              placeholder="Email"
+              type="text"
+              placeholder={authMode === "login" ? "Username or Email" : "Email"}
               value={authEmail}
               onChange={(e) => setAuthEmail(e.target.value)}
               className="w-full p-2 border rounded mb-2"
@@ -1109,36 +1169,65 @@ export default function TakesellPricesCalculator() {
               onChange={(e) => setAuthPassword(e.target.value)}
               className="w-full p-2 border rounded mb-2"
             />
+
             {authError && (
               <p className="text-sm text-red-600 mb-2">{authError}</p>
             )}
-            <div className="flex justify-between items-center mt-2">
-              <button
-                onClick={handleAuthAction}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                {authMode === "login" ? "Login" : "Sign Up"}
-              </button>
+
+          <div className="flex justify-between items-center mt-2">
+            {/* Login/Signup Button*/}
+            <button
+              onClick={handleAuthAction}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              {authMode === "login" ? "Login" : "Sign Up"}
+            </button>
+
+            <div className="flex flex-col items-end">
+              {/* Login/Signup Toggle Button*/}
               <button
                 onClick={() =>
                   setAuthMode(authMode === "login" ? "signup" : "login")
                 }
-                className="text-sm text-blue-600 underline"
+                className="text-sm text-blue-600"
               >
-                {authMode === "login"
-                  ? "Create new account"
-                  : "Already have account? Login"}
+                {authMode === "login" ? (
+                  "Create new account"
+                ) : (
+                  <>
+                    Already have account?{" "}
+                    <span className="text-green-600 font-semibold hover:text-green-900">
+                      Login
+                    </span>
+                  </>
+                )}
               </button>
+              
+              {/* Forgot Password Button*/}
+              {authMode === "login" && (
+                <button
+                  onClick={handleForgotPassword}
+                  className="text-xs text-red-500 hover:text-red-900 mt-1"
+                >
+                  {resetLoading ? "Reset Link Sending" : "Forgot Password?"}
+                </button>
+              )}
             </div>
-            <button
-              onClick={() => setShowAuthModal(false)}
-              className="mt-4 text-gray-600 text-sm underline w-full text-center"
-            >
-              Close
-            </button>
+          </div>
+          {/* Close Button */}
+          <button
+            onClick={() => setShowAuthModal(false)}
+            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center 
+                      bg-gray-200 hover:bg-red-500 hover:text-white text-gray-700 
+                      rounded-full shadow-md transition"
+          >
+            ✕
+          </button>
+
           </div>
         </div>
-      )} {/* ---------- Login / Signup Modal End ---------- */}
+      )}
+          {/* ---------- Login / Signup Modal End ---------- */}
 
     </div>
   );

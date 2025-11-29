@@ -61,7 +61,7 @@ export default function SignupPage() {
       setPassword("");
 
       // Redirect to login page or dashboard
-      navigate("/login");
+      navigate("/admin-login");
     } catch (error) {
       toast.error(error.message);
       console.error(error);

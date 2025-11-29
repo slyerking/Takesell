@@ -1,5 +1,12 @@
 📦 TakeSell Pricing Tool – Release Changelog
 
+
+29-11-2025 - v1.1.8 – Enhanced Login/Signup Modal
+
+Updated the Login/Signup modal with username-based login
+
+Added Forgot Password functionality for easier account recovery
+
 20-11-2025 - v1.1.7
 
 🔐 Login & Signup Pages

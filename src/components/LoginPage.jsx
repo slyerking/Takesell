@@ -95,7 +95,7 @@ export default function LoginPage() {
       await sendPasswordResetEmail(auth, emailToUse);
       toast.success("Password reset link sent to your email!");
     } catch (error) {
-      toast.error("Failed to send reset email");
+      toast.error("Too many reset requests. Try again later.");
     }
 
     setResetLoading(false);
