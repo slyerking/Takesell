@@ -71,12 +71,32 @@ export default function TakesellPricesCalculator() {
 
     // --- Tooltip Component End ---
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return unsubscribe;
-  }, []);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    if (currentUser) {
+      // Firestore থেকে fullName fetch করা
+      const q = query(
+        collection(db, "users"),
+        where("uid", "==", currentUser.uid)
+      );
+      const snapshot = await getDocs(q);
+
+      let fullName = currentUser.email; // default
+      if (!snapshot.empty) {
+        fullName = snapshot.docs[0].data().fullName;
+      }
+
+      setUser({
+        email: currentUser.email,
+        fullName: fullName,
+      });
+    } else {
+      setUser(null);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
 
     /* ---------------- Auth Functions Start ---------------- */
   const handleAuthAction = async () => {
@@ -296,7 +316,22 @@ export default function TakesellPricesCalculator() {
     setShowEditModal(true);
   }
 
-  // Fabrics Update Section Start 
+  // Fabrics Update Section Start
+
+  // Get User Fullname from Users collection function
+  async function getLoggedInUserFullName() {
+    const userEmail = auth.currentUser?.email;
+    if (!userEmail) return "Unknown";
+
+    const q = query(collection(db, "users"), where("email", "==", userEmail));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      return snapshot.docs[0].data().fullName || "Unknown"; // <-- fullName used here
+    }
+
+    return "Unknown";
+  }
 
   async function saveEditFabric() {
     if (!selectedFabric) return;
@@ -307,7 +342,7 @@ export default function TakesellPricesCalculator() {
       return;
     }
 
-    const userEmail = auth.currentUser?.email || "Unknown";
+    const userName = await getLoggedInUserFullName();
     const now = new Date();
 
     const prices = {};
@@ -327,7 +362,7 @@ export default function TakesellPricesCalculator() {
         // 🔥 Retail changed?
         ...(newRetail !== oldRetail
           ? {
-              retailUpdatedBy: userEmail,
+              retailUpdatedBy: userName,
               retailUpdatedAt: now,
             }
           : {
@@ -338,7 +373,7 @@ export default function TakesellPricesCalculator() {
         // 🔥 Wholesale changed?
         ...(newWholesale !== oldWholesale
           ? {
-              wholesaleUpdatedBy: userEmail,
+              wholesaleUpdatedBy: userName,
               wholesaleUpdatedAt: now,
             }
           : {
@@ -435,7 +470,7 @@ export default function TakesellPricesCalculator() {
             {user ? (
               <>
                 <div className="text-sm text-green-600 font-semibold">
-                  Logged in as {user.email}
+                  Logged in as {user?.fullName || user?.email}
                 </div>
                 <button
                   onClick={handleLogout}

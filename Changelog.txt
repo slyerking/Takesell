@@ -24,7 +24,8 @@ v1.1.5 - Added price update tracking tooltip with user and timestamp details.
 v1.1.6 - Added auto-hiding tooltip for price update tracking.
 v1.1.7 - Added Login and Signup pages with username login and forgot password functionality.
 v1.1.8 - Updated Login/Signup modal, adding username login and forgot password functionality.
-
+v1.1.9 - Updated homepage to show logged-in user as full name instead of email.
+       - Added tooltip displaying user's full name.
 
          
 
