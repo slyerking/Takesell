@@ -5,6 +5,7 @@ import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, where
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
 
 import toast, { Toaster } from "react-hot-toast";
+import packageJson from "../../package.json";
 
 export default function TakesellPricesCalculator() {
   const [copied, setCopied] = useState(false); // Copy Button state
@@ -441,8 +442,11 @@ useEffect(() => {
           {/* Spinner */}
           <br/>
           <div className="w-10 h-10 border-2 border-blue-200 border-t-transparent rounded-full animate-spin mb-4"></div>
+            {/* Version at bottom center */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center text-gray-400 text-sm">
+            Version v{packageJson.version}
+          </div>
         </div>
-        
       </div>
     );
 
@@ -470,7 +474,7 @@ useEffect(() => {
             {user ? (
               <>
                 <div className="text-sm text-green-600 font-semibold">
-                  Logged in as {user?.fullName || user?.email}
+                  Welcome, <span className="text-green-700">{user?.fullName || user?.email}</span>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -645,7 +649,13 @@ useEffect(() => {
                             : "Pcs";
 
                         return (
-                          <div key={p.key} className="flex justify-between mb-1">
+                          <div key={p.key}
+                               onClick={() => {
+                                  setQuantities((prev) => ({ ...prev, [p.key]: 0 }));
+                                  toast.success(`${selectedFabric.name} ${p.label} removed!`);
+                                }}
+                               className="flex justify-between items-center mb-1 cursor-pointer rounded transition-colors duration-200 hover:bg-red-100 hover:text-red-600"
+                               >
                             <span>
                               {selectedFabric.name} {p.label} {qty} {unitLabel}
                             </span>

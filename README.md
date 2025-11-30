@@ -67,14 +67,16 @@ Custom animations & tooltips
 📁 Project Structure (Simplified)
 src/
 │── components/
-│   ├── TakesellPricesCalculator.js
-│── firebase
+│   ├── LoginPage.jsx
+│   ├── SignupPage.jsx
+│   ├── TakesellPricesCalculator.jsx
+│── firebase.jsx
 │── index.css
 │── index.js
 └── App.jsx
 
 📌 Installation
-git clone https://github.com/yourusername/takesell-pricing-tool.git
+git clone https://github.com/slyerking/Takesell.git
 cd takesell-pricing-tool
 npm install
 npm start

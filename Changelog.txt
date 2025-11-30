@@ -26,5 +26,7 @@ v1.1.7 - Added Login and Signup pages with username login and forgot password fu
 v1.1.8 - Updated Login/Signup modal, adding username login and forgot password functionality.
 v1.1.9 - Updated homepage to show logged-in user as full name instead of email.
        - Added tooltip displaying user's full name.
-
+v1.2.0 - Added "Click to Remove" on price summary. 
+       - Updated greeting to "Welcome, Full Name".
+       - Displayed version on loading screen.
 

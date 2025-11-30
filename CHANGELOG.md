@@ -1,6 +1,14 @@
 📦 TakeSell Pricing Tool – Release Changelog
 
 
+30-11-2025 - v1.2.0 – UI & Interaction Improvements
+
+Added “Click to Remove” functionality in the price summary for easy item removal
+
+Updated greeting message to “Welcome, Full Name” for a more personalized experience
+
+Displayed app version on the loading screen for transparency
+
 29-11-2025 - v1.1.9 – User Display Enhancements
 
 Homepage now shows the logged-in user’s full name instead of email
