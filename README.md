@@ -1,106 +1,119 @@
-TakeSell Pricing Tool
+# TakeSell Pricing Tool
 
-A fast, modern, and user-friendly pricing calculator designed for fabric/product resellers.
-TakeSell Pricing Tool helps you compare wholesale, retail, and profit instantly while keeping every price update tracked with user and timestamp details.
+TakeSell Pricing Tool is a fast, modern, and user-friendly pricing calculator designed for fabric and product resellers.  
+It helps you instantly compare wholesale and retail prices, calculate profits, and track every price update with user and timestamp details.
 
-🚀 Features
-🔢 Dynamic Pricing Calculation
+---
 
-Automatic wholesale & retail price comparison
+## 🚀 Features
 
-Real-time total price and quantity calculation
+### 🔢 Dynamic Pricing Calculation
+- Automatic wholesale & retail price comparison  
+- Real-time total price and quantity calculation  
+- Grand total displayed in sidebar  
+- Total profit display in sidebar 
 
-Grand total displayed in sidebar
+### 🧮 Smart Price Summary
+- Clean and intuitive sidebar summary  
+- Price updates displayed clearly  
+- Smooth animations for a modern UI experience  
 
-Total profit display for each item
+### 👤 Price Update Tracking
+- Shows who updated the price  
+- Timestamp included for each update  
+- Auto-hiding tooltips for a distraction-free interface  
+- Mobile-friendly tooltip behavior  
 
-🧮 Smart Price Summary
+### 🎛️ Mode Switching
+- Switch between:
+  - Wholesale Price Mode  
+  - Retail Price Mode  
+- Auto-hide profit when in wholesale-only mode  
 
-Clean and intuitive sidebar summary
+### 🔄 Quantity Reset Button
+- Quickly clear quantity with a single click
+- Or click items to remove them individually
+- Includes clean, elegant animation  
 
-Price updates displayed clearly
+### 📋 Copy Tools
+- One-tap Total Price Copy feature  
+- Fast and accurate copying for easy sharing  
 
-Animations for a smooth and modern UI experience
+---
 
-👤 Price Update Tracking
+## 🛠️ Technology Stack
+- **Frontend:** React.js  
+- **Backend:** Firebase Firestore  
+- **Styling:** Tailwind CSS  
+- **Other:** Custom animations & tooltips  
 
-Shows who updated the price
+---
 
-Shows when (timestamp included)
+## 📁 Project Structure
+```
+takesell-pricing-tool/
+├── src/
+│ ├── components/
+│ │ ├── LoginPage.jsx
+│ │ ├── SignupPage.jsx
+│ │ └── TakesellPricesCalculator.jsx
+│ ├── firebase.jsx
+│ ├── index.css
+│ ├── index.js
+│ └── App.jsx
+├── package.json
+└── README.md
+```
+---
 
-Auto-hiding tooltips for a distraction-free interface
+## 📌 Installation
 
-Mobile-friendly tooltip handling and behavior
+Clone the repository and install dependencies:
 
-🎛️ Mode Switching
-
-Switch between:
-
-Wholesale Price Mode
-
-Retail Price Mode
-
-Auto-hide profit when in wholesale-only mode
-
-🔄 Quantity Reset Button
-
-A dedicated reset button to quickly clear quantity
-
-Includes a clean and elegant animation
-
-📋 Copy Tools
-
-One-tap Total Price Copy feature
-
-Fast and accurate copying for easy sharing
-
-🛠️ Technology Stack
-
-React.js
-
-Firebase Firestore
-
-Tailwind CSS
-
-Custom animations & tooltips
-
-📁 Project Structure (Simplified)
-src/
-│── components/
-│   ├── LoginPage.jsx
-│   ├── SignupPage.jsx
-│   ├── TakesellPricesCalculator.jsx
-│── firebase.jsx
-│── index.css
-│── index.js
-└── App.jsx
-
-📌 Installation
+```bash
 git clone https://github.com/slyerking/Takesell.git
 cd takesell-pricing-tool
 npm install
 npm start
+```
 
+Note: Make sure to add your Firebase configuration in:
+```
+src/firebase.jsx
+```
+---
+### 📍 Usage
 
-Make sure to add your Firebase config inside:
+1. Select your fabric or product
 
-src/firebase/config.js
+2. Toggle Wholesale or Retail price
 
-📍 Usage
+3. Enter Quantity
 
-Select your fabric/product
+4. View total price, profit, and summary
 
-Enter Wholesale or Retail price
+5. Track who updated prices and when
 
-Enter Quantity
+6. Use one-tap copy buttons for sharing
 
-Check profit, total price, and summary
+### 🖼 Screenshots
+<div align="center"> 
+<img width="1920" height="1080" alt="1  Home Page" src="https://github.com/user-attachments/assets/6453f4eb-13f5-48d4-8122-0d73fc1a5416" />
+<img width="1920" height="1074" alt="2  Login Modal" src="https://github.com/user-attachments/assets/1c29a088-cf32-4731-88ea-37fd8cdb0cb0" />
+<img width="1920" height="1080" alt="3  Logged in User" src="https://github.com/user-attachments/assets/a7ce3b05-e797-4cca-acea-44c481215eca" />
+<img width="1920" height="1080" alt="4  Price Summary" src="https://github.com/user-attachments/assets/5b734b6c-cf18-466f-9414-cd599f5c5e03" />
+<img width="1920" height="1080" alt="7  Edit Fabric Modal" src="https://github.com/user-attachments/assets/3d0cd701-5279-44af-bacc-ebf23aa11f01" />
+<img width="1920" height="1080" alt="5  Add New Fabric Modal" src="https://github.com/user-attachments/assets/fe750795-1705-42e2-a19e-df573d45b359" />
+<img width="1920" height="1080" alt="6  Delete Fabric Modal" src="https://github.com/user-attachments/assets/bb49788e-a6f1-4e73-a7ab-65b263ac850f" />
+</div>
 
-Track who updated the prices
+###  🌐 Live Demo
 
-Use quick copy buttons for sharing
+<div align="center"> 
+  <a href="https://takesell.vercel.app">Try It Now</a>
+</div>
 
-🗂️ Changelog (Short Version)
+###  🗂️ Changelog (Short Version)
 
 Added total profit display
 
@@ -118,11 +131,24 @@ Total Price copy feature
 
 Wholesale/Retail mode improvements
 
-🤝 Contributing
+###  🤝 Contributing
+We welcome contributions!
 
-Pull requests are welcome!
-Suggest improvements, fix bugs, or add new features.
+1. Fork the repository
+2. Create a new branch (git checkout -b feature/YourFeature)
+3. Commit your changes (git commit -m 'Add some feature')
+4. Push to the branch (git push origin feature/YourFeature)
+5. Open a Pull Request
 
-📜 License
+### 📜 License
 
-MIT License
+This project is licensed under the MIT License. See the LICENSE
+ file for details.
+
+ 📞 Contact
+
+For questions or feedback, reach out to:
+
+[Facebook](https://www.facebook.com/obaydullah.obaydullah.3)
+
+[GitHub](https://github.com/slyerking)
