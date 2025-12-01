@@ -197,6 +197,7 @@ useEffect(() => {
 
     const handleReset = () => {
     setQuantities({});            // Qty is Reset
+    toast.success("All values have been reset!");
     setIsRotating(true);          // Rotate Reset Icon
     setTimeout(() => setIsRotating(false), 600); // 0.6 Second
   }; // ---------------- Reset Button End ----------------
@@ -725,7 +726,10 @@ useEffect(() => {
 
             <button
               onClick={handleReset}
-              className="text-sm px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 active:scale-95 transition"
+              disabled={Object.keys(quantities).length === 0}
+              className={`${Object.keys(quantities).length === 0 ? "opacity-50 pointer-events-none text-sm px-3 py-1 bg-gray-100" 
+                  : "text-sm px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 active:scale-95 transition"
+                }`}
             >
               <i
                 className={`fa-solid fa-rotate-right text-blue-900 transition-transform duration-500 ${

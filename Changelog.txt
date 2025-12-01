@@ -2,31 +2,75 @@ Takesell Prices Calculator (TAKESELL PRICING TOOL)
 
 Release Notes / Changelog:
 
-v1.0.0 - Initial release.
-v1.0.1 - Updated footer.
-v1.0.2 - Added FontAwesome icons.
-v1.0.3 - Grand total price added to sidebar.
-v1.0.4 - Price summary added to sidebar.
-v1.0.5 - Updated price summary and added favicon.
-v1.0.6 - Added login/signup modal. 
-       - Login required for Add, Edit, Delete.
-v1.0.7 - Added React Hot Toast and corner/divan cover features.
-v1.0.8 - Total price displayed in price summary.
-v1.0.9 - Added clipboard button for price summary.
-v1.1.0 - Animated loading screen added.
-v1.1.1 - New user registration disabled.
-v1.1.2 - Quantity reset button added.
-v1.1.3 - Added animated effect to quantity reset button.
-       - Renamed app to TAKESELL PRICING TOOL.
-       - Added only total price copy feature.
-v1.1.4 - Added total profit display to price summary.
-v1.1.5 - Added price update tracking tooltip with user and timestamp details.
-v1.1.6 - Added auto-hiding tooltip for price update tracking.
-v1.1.7 - Added Login and Signup pages with username login and forgot password functionality.
-v1.1.8 - Updated Login/Signup modal, adding username login and forgot password functionality.
-v1.1.9 - Updated homepage to show logged-in user as full name instead of email.
-       - Added tooltip displaying user's full name.
-v1.2.0 - Added "Click to Remove" on price summary. 
-       - Updated greeting to "Welcome, Full Name".
-       - Displayed version on loading screen.
+v1.0.0 - 24-10-2025
+- Initial release.
+
+v1.0.1 - 25-10-2025
+- Updated footer.
+
+v1.0.2 - 26-10-2025
+- Added FontAwesome icons.
+
+v1.0.3 - 27-10-2025
+- Grand total price added to sidebar.
+
+v1.0.4 - 28-10-2025
+- Price summary added to sidebar.
+
+v1.0.5 - 29-10-2025
+- Updated price summary and added favicon.
+
+v1.0.6 - 03-11-2025
+- Added login/signup modal.     
+- Login required for Add, Edit, Delete.
+
+v1.0.7 - 10-11-2025
+- Added React Hot Toast and corner/divan cover features.
+
+v1.0.8 - 11-11-2025
+- Total price displayed in price summary.
+
+v1.0.9 - 11-11-2025
+- Added clipboard button for price summary.
+
+v1.1.0 - 11-11-2025
+- Animated loading screen added.
+
+v1.1.1 - 11-11-2025
+- New user registration disabled.
+
+v1.1.2 - 12-11-2025
+- Quantity reset button added.
+
+v1.1.3 - 12-11-2025
+- Added animated effect to quantity reset button.     
+- Renamed app to TAKESELL PRICING TOOL.
+- Added only total price copy feature.
+
+v1.1.4 - 16-11-2025
+- Added total profit display to price summary.
+
+v1.1.5 - 19-11-2025
+- Added price update tracking tooltip with user and timestamp details.
+
+v1.1.6 - 19-11-2025
+- Added auto-hiding tooltip for price update tracking.
+
+v1.1.7 - 20-11-2025
+- Added Login and Signup pages with username login and forgot password functionality.
+
+v1.1.8 - 24-11-2025
+- Updated Login/Signup modal, adding username login and forgot password functionality.
+
+v1.1.9 - 29-11-2025
+- Updated homepage to show logged-in user as full name instead of email.
+- Added tooltip displaying user's full name.
+
+v1.2.0 - 30-11-2025
+- Added “Click to Remove” functionality in the price summary.  
+- Updated greeting message to “Welcome, Full Name”.  
+- Displayed app version on the loading screen.  
+- Improved reset button behavior by disabling it when quantity is zero, and added toast notifications.
+
+
 
